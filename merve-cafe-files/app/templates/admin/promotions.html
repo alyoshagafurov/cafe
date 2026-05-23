@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Акции — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-head"><div><h1>Акции и купоны</h1><div class="sub">Промокоды и скидки</div></div></div>
+
+<div class="panel">
+  <h3>Новая акция</h3>
+  <form method="post" action="{{ url_for('admin.promo_save') }}" class="form-grid">
+    <div class="form-grid cols-2 full">
+      <div class="fld"><label>Название</label><input type="text" name="title" required></div>
+      <div class="fld"><label>Промокод</label><input type="text" name="code" placeholder="MERVE10"></div>
+    </div>
+    <div class="fld full"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
+    <div class="form-grid cols-3 full">
+      <div class="fld"><label>Скидка %</label><input type="number" name="discount_percent" value="10"></div>
+      <div class="fld"><label>Действует до</label><input type="date" name="valid_until"></div>
+      <label class="fld check"><input type="checkbox" name="active" checked> <label>Активна</label></label>
+    </div>
+    <div class="full"><button class="btn btn-gold" type="submit">Создать акцию</button></div>
+  </form>
+</div>
+
+<div class="panel">
+  <h3>Все акции</h3>
+  <table class="tbl">
+    <thead><tr><th>Название</th><th>Код</th><th>Скидка</th><th>До</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+    {% for p in rows %}
+      <tr>
+        <td>{{ p.title }}</td>
+        <td><b>{{ p.code or '—' }}</b></td>
+        <td>{{ p.discount_percent }}%</td>
+        <td class="muted">{{ p.valid_until.strftime('%d.%m.%Y') if p.valid_until else '∞' }}</td>
+        <td>{% if p.active %}<span class="pill approved">Активна</span>{% else %}<span class="pill rejected">Выкл</span>{% endif %}</td>
+        <td><form class="inline-form" method="post" action="{{ url_for('admin.promo_delete', pid=p.id) }}" onsubmit="return confirm('Удалить?')"><button class="btn btn-red btn-sm">🗑</button></form></td>
+      </tr>
+    {% else %}<tr><td colspan="6" class="muted">Акций нет</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
