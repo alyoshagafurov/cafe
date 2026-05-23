@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Бронирование — МЕРВЕ{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-eyebrow">Забронируйте</span>
+    <h1 class="page-title">Ваш <em>столик</em></h1>
+    <p>Зарезервируйте место заранее и приходите без ожидания</p>
+  </div>
+</section>
+
+<section class="section booking-section">
+  <div class="container">
+    <div class="booking-grid">
+      <div class="booking-form-wrap reveal-left">
+        <h2 class="form-title">Новое бронирование</h2>
+        <form method="POST" class="booking-form">
+          <div class="form-group">
+            <label>Ваше имя</label>
+            <input type="text" name="name" required placeholder="Введите ваше имя" value="{{ session.username }}"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Дата</label>
+              <input type="date" name="date" required min="{{ '' }}"/>
+            </div>
+            <div class="form-group">
+              <label>Время</label>
+              <select name="time" required>
+                <option value="">Выберите время</option>
+                {% for h in range(9, 23) %}
+                  <option value="{{ '%02d:00'|format(h) }}">{{ '%02d:00'|format(h) }}</option>
+                  <option value="{{ '%02d:30'|format(h) }}">{{ '%02d:30'|format(h) }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Количество гостей</label>
+            <div class="guests-selector">
+              {% for n in [1,2,3,4,5,6,7,8] %}
+              <label class="guest-option">
+                <input type="radio" name="guests" value="{{ n }}" {% if n==2 %}checked{% endif %}/>
+                <span>{{ n }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Комментарий (необязательно)</label>
+            <textarea name="comment" rows="3" placeholder="Особые пожелания, повод..."></textarea>
+          </div>
+          <button type="submit" class="btn-gold btn-full">✓ Забронировать столик</button>
+        </form>
+      </div>
+
+      <div class="booking-info reveal-right">
+        <div class="booking-info-card">
+          <h3>Информация</h3>
+          <div class="info-item"><span class="info-icon">🕐</span><div><strong>Часы работы</strong><p>Ежедневно с 09:00 до 23:00</p></div></div>
+          <div class="info-item"><span class="info-icon">📍</span><div><strong>Адрес</strong><p>ул. Профсоюзная, Душанбе, Таджикистан</p></div></div>
+          <div class="info-item"><span class="info-icon">☎</span><div><strong>Телефон</strong><p>+992 44 600 00 00</p></div></div>
+          <div class="info-item"><span class="info-icon">👥</span><div><strong>Вместимость</strong><p>До 60 гостей. Для больших групп свяжитесь с нами</p></div></div>
+          <div class="info-note">
+            <strong>⚡ Подтверждение</strong>
+            <p>Бронирование подтверждается автоматически. При отмене просим уведомить нас за 2 часа.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if user_bookings %}
+    <div class="my-bookings reveal-up">
+      <h2 class="form-title">Мои бронирования</h2>
+      <div class="bookings-list">
+        {% for b in user_bookings %}
+        <div class="booking-item">
+          <div class="booking-date-badge">
+            <span class="b-date">{{ b.date }}</span>
+            <span class="b-time">{{ b.time }}</span>
+          </div>
+          <div class="booking-details">
+            <strong>{{ b.name }}</strong>
+            <span>{{ b.guests }} гост{{ 'ь' if b.guests == 1 else ('я' if b.guests < 5 else 'ей') }}</span>
+            {% if b.comment %}<em>{{ b.comment }}</em>{% endif %}
+          </div>
+          <div class="booking-status">Подтверждено ✓</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

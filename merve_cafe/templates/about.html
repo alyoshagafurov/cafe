@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}О нас — МЕРВЕ{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-eyebrow">Наша история</span>
+    <h1 class="page-title">О кафе <em>МЕРВЕ</em></h1>
+    <p>Любовь к кофе, воплощённая в каждой детали</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="about-story-grid">
+      <div class="about-story-text">
+        <span class="section-eyebrow reveal-left">Кто мы</span>
+        <h2 class="section-title reveal-left">Наша<br><em>история</em></h2>
+        <p class="about-text reveal-left">Кафе МЕРВЕ открылось в Душанбе с одной простой идеей — создать место, где каждый гость чувствует себя особенным. Название «Мерве» (مروه) в арабской культуре означает белый нарцисс — символ красоты, чистоты и изящества.</p>
+        <p class="about-text reveal-left">Расположенное в Профсоюзном районе Душанбе, наше кафе стало любимым местом встреч для тех, кто ценит качество и атмосферу. Мы гордимся тем, что каждый день создаём маленькие моменты счастья для наших гостей.</p>
+        <p class="about-text reveal-left">Наши бариста прошли специальную подготовку и с любовью подбирают зёрна со всего мира, чтобы каждая чашка была идеальной.</p>
+      </div>
+      <div class="about-story-visual reveal-right">
+        <div class="about-orb-container">
+          <div class="about-orb-main">مروه</div>
+          <div class="about-orb-ring r1"></div>
+          <div class="about-orb-ring r2"></div>
+          <div class="about-orb-ring r3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section values-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow reveal-up">Наши ценности</span>
+      <h2 class="section-title reveal-up">Что нас отличает</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal-up tilt-card">
+        <div class="value-icon">☕</div>
+        <h3>Качество</h3>
+        <p>Только отборные зёрна, свежая выпечка и натуральные ингредиенты. Мы не идём на компромисс.</p>
+      </div>
+      <div class="value-card reveal-up tilt-card" style="animation-delay:0.1s">
+        <div class="value-icon">🤝</div>
+        <h3>Гостеприимство</h3>
+        <p>Восточное радушие и внимание к каждому гостю — наша главная традиция.</p>
+      </div>
+      <div class="value-card reveal-up tilt-card" style="animation-delay:0.2s">
+        <div class="value-icon">🎨</div>
+        <h3>Атмосфера</h3>
+        <p>Дизайн, музыка, освещение — всё создано так, чтобы вы хотели остаться подольше.</p>
+      </div>
+      <div class="value-card reveal-up tilt-card" style="animation-delay:0.3s">
+        <div class="value-icon">🌱</div>
+        <h3>Свежесть</h3>
+        <p>Все блюда готовятся ежедневно. Никаких замороженных полуфабрикатов.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section team-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow reveal-up">Наши цифры</span>
+      <h2 class="section-title reveal-up">МЕРВЕ в числах</h2>
+    </div>
+    <div class="numbers-grid">
+      <div class="number-card reveal-up"><span class="big-num" data-target="5">0</span><span>лет<br>на рынке</span></div>
+      <div class="number-card reveal-up"><span class="big-num" data-target="30">0</span><span>позиций<br>в меню</span></div>
+      <div class="number-card reveal-up"><span class="big-num" data-target="1000">0</span><span>гостей<br>в месяц</span></div>
+      <div class="number-card reveal-up"><span class="big-num" data-target="8">0</span><span>видов<br>кофе</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="about-cta-section">
+  <div class="container">
+    <div class="about-cta reveal-up">
+      <h2>Приходите познакомиться</h2>
+      <p>Лучший способ узнать нас — это прийти и ощутить атмосферу МЕРВЕ лично</p>
+      <div class="about-cta-btns">
+        <a href="{{ url_for('booking') }}" class="btn-gold">Забронировать столик</a>
+        <a href="{{ url_for('contact') }}" class="btn-outline">Как нас найти</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

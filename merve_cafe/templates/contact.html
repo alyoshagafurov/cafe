@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Контакты — МЕРВЕ{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-eyebrow">Найдите нас</span>
+    <h1 class="page-title">Контакты</h1>
+    <p>Мы ждём вас по адресу в Душанбе</p>
+  </div>
+</section>
+
+<section class="section contact-section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info-wrap reveal-left">
+        <h2 class="form-title">Как нас найти</h2>
+        <div class="contact-cards">
+          <div class="contact-card tilt-card">
+            <div class="cc-icon">📍</div>
+            <div>
+              <h4>Адрес</h4>
+              <p>ул. Профсоюзная, Душанбе,<br>Республика Таджикистан</p>
+            </div>
+          </div>
+          <div class="contact-card tilt-card">
+            <div class="cc-icon">☎</div>
+            <div>
+              <h4>Телефон</h4>
+              <p><a href="tel:+992446000000">+992 44 600 00 00</a></p>
+            </div>
+          </div>
+          <div class="contact-card tilt-card">
+            <div class="cc-icon">🕐</div>
+            <div>
+              <h4>Часы работы</h4>
+              <p>Ежедневно: 09:00 — 23:00</p>
+            </div>
+          </div>
+          <div class="contact-card tilt-card">
+            <div class="cc-icon">✉</div>
+            <div>
+              <h4>Email</h4>
+              <p><a href="mailto:info@merve.tj">info@merve.tj</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="social-links">
+          <h4>Социальные сети</h4>
+          <div class="social-btns">
+            <a href="#" class="social-btn">Instagram</a>
+            <a href="#" class="social-btn">Telegram</a>
+            <a href="#" class="social-btn">Facebook</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-wrap reveal-right">
+        <div class="map-container">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2999.7!2d68.7864!3d38.5598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDMzJzM1LjMiTiA2OMKwNDcnMTEuMCJF!5e0!3m2!1sru!2s!4v1700000000000!5m2!1sru!2s"
+            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="Кафе МЕРВЕ на карте">
+          </iframe>
+        </div>
+        <div class="map-caption">
+          <span>📌 Душанбе, ул. Профсоюзная</span>
+          <a href="https://maps.google.com/?q=38.5598,68.7864" target="_blank" class="btn-outline btn-sm">Открыть в Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-cta-section">
+  <div class="container">
+    <div class="contact-cta reveal-up">
+      <div class="contact-cta-deco">مروه</div>
+      <h2>Ждём вас в МЕРВЕ</h2>
+      <p>Зарезервируйте столик и приходите без ожидания</p>
+      <a href="{{ url_for('booking') }}" class="btn-gold">Забронировать столик</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
