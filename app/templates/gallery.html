@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Галерея — {{ BRAND }}{% endblock %}
+{% block meta %}Галерея MERVE Café: интерьер, блюда, напитки, атмосфера и VIP-зона. Загляните в наш мир роскоши.{% endblock %}
+
+{% block content %}
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow reveal">Atmosphere</span>
+    <h1 class="page-title reveal">Галерея</h1>
+    <p class="page-sub reveal">Интерьер, авторские блюда и атмосфера, которую невозможно передать словами.</p>
+  </div>
+</header>
+
+<section class="section gallery-section">
+  <div class="container">
+    <div class="gal-filters reveal">
+      <button class="chip active" data-section="all">Все</button>
+      {% for s in sections %}
+      <button class="chip" data-section="{{ s }}">{{ s }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="gal-grid">
+      {% for img in images %}
+      <figure class="gal-item reveal" data-section="{{ img.section }}" data-full="{{ url_for('static', filename=img.image_url) }}">
+        <img src="{{ url_for('static', filename=img.image_url) }}" alt="{{ img.title or img.section }}" loading="lazy">
+        <figcaption>
+          <span class="gal-section">{{ img.section }}</span>
+          {% if img.title %}<span class="gal-title">{{ img.title }}</span>{% endif %}
+        </figcaption>
+      </figure>
+      {% else %}
+      <p class="muted">Галерея скоро пополнится.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" aria-hidden="true">
+  <button class="close" aria-label="Закрыть">×</button>
+  <img src="" alt="">
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — {{ BRAND }}{% endblock %}
+{% block meta %}{{ post.meta_description or post.excerpt }}{% endblock %}
+
+{% block content %}
+<article class="post-detail">
+  <header class="post-hero" style="background-image:linear-gradient(180deg,rgba(8,8,9,.35),rgba(8,8,9,.92)),url('{{ url_for('static', filename=post.cover_url) }}')">
+    <div class="container">
+      <span class="post-cat reveal">{{ post.category }}</span>
+      <h1 class="reveal">{{ post.title }}</h1>
+      <time class="post-date reveal">{{ post.created_at.strftime('%d.%m.%Y') }}</time>
+    </div>
+  </header>
+
+  <div class="container post-content reveal">
+    {% if post.excerpt %}<p class="post-lead">{{ post.excerpt }}</p>{% endif %}
+    <div class="post-text">
+      {% for para in post.body.split('\n') %}
+        {% if para.strip() %}<p>{{ para.strip() }}</p>{% endif %}
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('main.blog') }}" class="link-arrow">← Все публикации</a>
+  </div>
+</article>
+
+{% if more %}
+<section class="section section-alt">
+  <div class="container">
+    <h2 class="section-title reveal">Читайте также</h2>
+    <div class="posts-grid">
+      {% for p in more %}
+      <article class="post-card reveal">
+        <a href="{{ url_for('main.blog_detail', slug=p.slug) }}" class="post-media">
+          <img src="{{ url_for('static', filename=p.cover_url) }}" alt="{{ p.title }}" loading="lazy">
+          <span class="post-cat">{{ p.category }}</span>
+        </a>
+        <div class="post-body">
+          <time class="post-date">{{ p.created_at.strftime('%d.%m.%Y') }}</time>
+          <h3><a href="{{ url_for('main.blog_detail', slug=p.slug) }}">{{ p.title }}</a></h3>
+          <p>{{ p.excerpt }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

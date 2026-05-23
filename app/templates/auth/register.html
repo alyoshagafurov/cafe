@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — {{ BRAND }}{% endblock %}
+
+{% block content %}
+<section class="section auth-section">
+  <div class="container auth-wrap">
+    <div class="auth-card reveal">
+      <span class="eyebrow">Join us</span>
+      <h1>Создать аккаунт</h1>
+      <p class="muted">Регистрируйтесь, чтобы копить бонусы и бронировать столы быстрее.</p>
+      <form method="post" action="{{ url_for('auth.register') }}" class="lux-form" enctype="multipart/form-data">
+        <div class="field"><label>Имя пользователя</label><input type="text" name="username" required autofocus></div>
+        <div class="field"><label>Пароль</label><input type="password" name="password" required minlength="4"></div>
+        <div class="field">
+          <label>Аватар <em class="muted">(необязательно)</em></label>
+          <input type="file" name="avatar" accept="image/*" class="file-input">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block btn-lg">Зарегистрироваться</button>
+      </form>
+      <p class="auth-alt">Уже есть аккаунт? <a href="{{ url_for('auth.login') }}">Войти</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

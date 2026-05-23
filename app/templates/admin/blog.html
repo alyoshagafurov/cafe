@@ -1,0 +1,71 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Журнал — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-head"><div><h1>Журнал / Блог</h1><div class="sub">Новости, акции и события</div></div></div>
+
+<div class="panel">
+  <h3 id="blog-form-title">Новая публикация</h3>
+  <form method="post" action="{{ url_for('admin.blog_save') }}" enctype="multipart/form-data" class="form-grid" id="blog-form">
+    <input type="hidden" name="id" id="b-id">
+    <div class="form-grid cols-2 full">
+      <div class="fld"><label>Заголовок</label><input type="text" name="title" id="b-title" required></div>
+      <div class="fld"><label>Slug</label><input type="text" name="slug" id="b-slug" placeholder="new-autumn-menu"></div>
+    </div>
+    <div class="fld full"><label>Краткое описание</label><textarea name="excerpt" id="b-excerpt" rows="2"></textarea></div>
+    <div class="fld full"><label>Текст</label><textarea name="body" id="b-body" rows="6"></textarea></div>
+    <div class="form-grid cols-2 full">
+      <div class="fld"><label>Категория</label><input type="text" name="category" id="b-cat" value="News"></div>
+      <div class="fld"><label>SEO meta description</label><input type="text" name="meta_description" id="b-meta"></div>
+    </div>
+    <div class="fld full"><label>Обложка (загрузка)</label><input type="file" name="cover" accept="image/*"></div>
+    <div class="fld full"><label>или путь к обложке</label><input type="text" name="cover_url" id="b-cover" placeholder="img/placeholder-desserts.svg"></div>
+    <label class="fld check full"><input type="checkbox" name="published" id="b-pub" checked> <label>Опубликовано</label></label>
+    <div class="full"><button class="btn btn-gold" type="submit">Сохранить</button>
+      <button class="btn btn-ghost" type="button" onclick="resetBlog()">Очистить</button></div>
+  </form>
+</div>
+
+<div class="panel">
+  <h3>Все публикации</h3>
+  <table class="tbl">
+    <thead><tr><th></th><th>Заголовок</th><th>Категория</th><th>Дата</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+    {% for p in rows %}
+      <tr>
+        <td><img class="thumb" src="{{ url_for('static', filename=p.cover_url) }}" alt=""></td>
+        <td>{{ p.title }}</td>
+        <td class="muted">{{ p.category }}</td>
+        <td class="muted">{{ p.created_at.strftime('%d.%m.%Y') }}</td>
+        <td>{% if p.published %}<span class="pill approved">Опубл.</span>{% else %}<span class="pill pending">Черновик</span>{% endif %}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm" onclick='editBlog({{ {"id": p.id, "title": p.title, "slug": p.slug, "excerpt": p.excerpt, "body": p.body, "category": p.category, "meta_description": p.meta_description, "published": p.published, "cover": p.cover}|tojson }})'>✎</button>
+          <form class="inline-form" method="post" action="{{ url_for('admin.blog_delete', pid=p.id) }}" onsubmit="return confirm('Удалить пост?')"><button class="btn btn-red btn-sm">🗑</button></form>
+        </td>
+      </tr>
+    {% else %}<tr><td colspan="6" class="muted">Публикаций нет</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+function editBlog(d){
+  document.getElementById('blog-form-title').textContent='Редактировать публикацию';
+  document.getElementById('b-id').value=d.id;
+  document.getElementById('b-title').value=d.title||'';
+  document.getElementById('b-slug').value=d.slug||'';
+  document.getElementById('b-excerpt').value=d.excerpt||'';
+  document.getElementById('b-body').value=d.body||'';
+  document.getElementById('b-cat').value=d.category||'';
+  document.getElementById('b-meta').value=d.meta_description||'';
+  document.getElementById('b-cover').value=d.cover||'';
+  document.getElementById('b-pub').checked=!!d.published;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetBlog(){
+  document.getElementById('blog-form').reset();
+  document.getElementById('b-id').value='';
+  document.getElementById('blog-form-title').textContent='Новая публикация';
+}
+</script>
+{% endblock %}
