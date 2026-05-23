@@ -1,0 +1,33 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Заказы — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-head"><div><h1>Заказы</h1><div class="sub">Онлайн-заказы и статусы доставки</div></div></div>
+
+<div class="panel">
+  <table class="tbl">
+    <thead><tr><th>№</th><th>Клиент</th><th>Телефон</th><th>Тип</th><th>Сумма</th><th>Создан</th><th>Статус</th></tr></thead>
+    <tbody>
+    {% for o in rows %}
+      <tr>
+        <td>#{{ o.id }}</td>
+        <td>{{ o.customer_name }}</td>
+        <td>{{ o.phone }}</td>
+        <td>{{ 'Доставка' if o.fulfillment == 'delivery' else 'Самовывоз' }}</td>
+        <td>{{ o.total|int }} сом.</td>
+        <td class="muted">{{ o.created_at.strftime('%d.%m %H:%M') }}</td>
+        <td>
+          <form class="inline-form" method="post" action="{{ url_for('admin.order_status', oid=o.id) }}">
+            <select name="status" class="btn-ghost btn-sm" onchange="this.form.submit()" style="padding:.35rem .5rem;border-radius:8px">
+              {% for st in ['Preparing', 'On the way', 'Delivered'] %}
+              <option value="{{ st }}" {{ 'selected' if o.status==st }}>{{ st }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+      </tr>
+    {% else %}<tr><td colspan="7" class="muted">Заказов нет</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

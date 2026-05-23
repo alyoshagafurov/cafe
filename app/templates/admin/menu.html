@@ -1,0 +1,110 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Меню — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-head"><div><h1>Управление меню</h1><div class="sub">Блюда и категории</div></div></div>
+
+<div class="two-col">
+  <!-- Item form -->
+  <div class="panel">
+    <h3 id="form-title">Добавить блюдо</h3>
+    <form method="post" action="{{ url_for('admin.menu_save') }}" enctype="multipart/form-data" id="item-form" class="form-grid">
+      <input type="hidden" name="id" id="f-id">
+      <div class="fld full"><label>Название</label><input type="text" name="title" id="f-title" required></div>
+      <div class="form-grid cols-2 full">
+        <div class="fld"><label>Категория</label>
+          <select name="category_id" id="f-cat" required>
+            {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="fld"><label>Цена (сом.)</label><input type="number" step="0.01" name="price" id="f-price" required></div>
+      </div>
+      <div class="fld full"><label>Описание</label><textarea name="description" id="f-desc" rows="2"></textarea></div>
+      <div class="fld full"><label>Ингредиенты</label><input type="text" name="ingredients" id="f-ing"></div>
+      <div class="form-grid cols-3 full">
+        <div class="fld"><label>Калории</label><input type="number" name="calories" id="f-cal" value="0"></div>
+        <div class="fld"><label>Популярность %</label><input type="number" name="popularity" id="f-pop" min="0" max="100" value="50"></div>
+        <div class="fld"><label>Бейдж</label>
+          <select name="badge" id="f-badge">
+            <option value="">—</option>
+            <option value="best">Best Seller</option>
+            <option value="premium">Premium</option>
+            <option value="new">New</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld full"><label>Фото (загрузка)</label><input type="file" name="photo" accept="image/*"></div>
+      <div class="fld full"><label>или путь к фото</label><input type="text" name="photo_url" id="f-photourl" placeholder="img/placeholder-coffee.svg"></div>
+      <label class="fld check full"><input type="checkbox" name="is_hidden" id="f-hidden"> <label>Скрыть блюдо</label></label>
+      <div class="full"><button class="btn btn-gold" type="submit">Сохранить</button>
+        <button class="btn btn-ghost" type="button" onclick="resetItemForm()">Очистить</button></div>
+    </form>
+  </div>
+
+  <!-- Category form -->
+  <div class="panel">
+    <h3>Добавить категорию</h3>
+    <form method="post" action="{{ url_for('admin.category_save') }}" class="form-grid">
+      <div class="fld"><label>Название</label><input type="text" name="name" required></div>
+      <div class="fld"><label>Slug</label><input type="text" name="slug" placeholder="coffee" required></div>
+      <div class="form-grid cols-2 full">
+        <div class="fld"><label>Иконка</label><input type="text" name="icon" value="✦"></div>
+        <div class="fld"><label>Порядок</label><input type="number" name="sort_order" value="0"></div>
+      </div>
+      <div class="full"><button class="btn btn-gold" type="submit">Добавить категорию</button></div>
+    </form>
+    <h3 style="margin-top:1.4rem">Категории</h3>
+    <ul class="list-clean">
+      {% for c in categories %}<li><span>{{ c.icon }} {{ c.name }}</span><b class="muted">{{ c.slug }}</b></li>{% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>Все блюда ({{ items|length }})</h3>
+  <table class="tbl">
+    <thead><tr><th></th><th>Название</th><th>Категория</th><th>Цена</th><th>Поп.</th><th>Бейдж</th><th>Видимость</th><th>Действия</th></tr></thead>
+    <tbody>
+    {% for i in items %}
+      <tr>
+        <td><img class="thumb" src="{{ url_for('static', filename=i.photo_url) }}" alt=""></td>
+        <td>{{ i.title }}</td>
+        <td class="muted">{{ i.category.name }}</td>
+        <td>{{ i.price|int }} сом.</td>
+        <td>{{ i.popularity }}%</td>
+        <td>{{ i.badge or '—' }}</td>
+        <td>{% if i.is_hidden %}<span class="pill rejected">Скрыто</span>{% else %}<span class="pill approved">Видно</span>{% endif %}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm"
+            onclick='editItem({{ {"id": i.id, "title": i.title, "category_id": i.category_id, "price": i.price, "description": i.description, "ingredients": i.ingredients, "calories": i.calories, "popularity": i.popularity, "badge": i.badge, "is_hidden": i.is_hidden, "photo": i.photo}|tojson }})'>✎</button>
+          <form class="inline-form" method="post" action="{{ url_for('admin.menu_toggle', iid=i.id) }}"><button class="btn btn-ghost btn-sm">👁</button></form>
+          <form class="inline-form" method="post" action="{{ url_for('admin.menu_delete', iid=i.id) }}" onsubmit="return confirm('Удалить блюдо?')"><button class="btn btn-red btn-sm">🗑</button></form>
+        </td>
+      </tr>
+    {% else %}<tr><td colspan="8" class="muted">Блюд нет</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+function editItem(d){
+  document.getElementById('form-title').textContent='Редактировать блюдо';
+  document.getElementById('f-id').value=d.id;
+  document.getElementById('f-title').value=d.title||'';
+  document.getElementById('f-cat').value=d.category_id||'';
+  document.getElementById('f-price').value=d.price||0;
+  document.getElementById('f-desc').value=d.description||'';
+  document.getElementById('f-ing').value=d.ingredients||'';
+  document.getElementById('f-cal').value=d.calories||0;
+  document.getElementById('f-pop').value=d.popularity||0;
+  document.getElementById('f-badge').value=d.badge||'';
+  document.getElementById('f-photourl').value=d.photo||'';
+  document.getElementById('f-hidden').checked=!!d.is_hidden;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetItemForm(){
+  document.getElementById('item-form').reset();
+  document.getElementById('f-id').value='';
+  document.getElementById('form-title').textContent='Добавить блюдо';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Бронирование стола — {{ BRAND }}{% endblock %}
+{% block meta %}Забронируйте стол или VIP-зону в MERVE Café (Душанбе). Онлайн-бронирование с подтверждением статуса.{% endblock %}
+
+{% block content %}
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow reveal">Reservations</span>
+    <h1 class="page-title reveal">Бронирование стола</h1>
+    <p class="page-sub reveal">Зарезервируйте идеальный вечер. Обычный стол или VIP-зона с премиальным размещением — выбор за вами.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container booking-layout">
+    <div class="booking-form-wrap reveal">
+      <form method="post" action="{{ url_for('booking.booking') }}" class="lux-form" id="booking-form">
+        <div class="grid-2">
+          <div class="field">
+            <label>Имя</label>
+            <input type="text" name="name" required placeholder="Ваше имя">
+          </div>
+          <div class="field">
+            <label>Телефон</label>
+            <input type="tel" name="phone" required placeholder="+992 ...">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Гостей</label>
+            <input type="number" name="guests" min="1" max="30" value="2">
+          </div>
+          <div class="field">
+            <label>Дата</label>
+            <input type="date" name="date" required>
+          </div>
+          <div class="field">
+            <label>Время</label>
+            <input type="time" name="time" value="19:00">
+          </div>
+        </div>
+        <div class="field">
+          <label>Особые пожелания</label>
+          <textarea name="special_request" rows="3" placeholder="Торт ко дню рождения, тихий уголок, детский стул…"></textarea>
+        </div>
+        <label class="switch-row" id="vip-row">
+          <input type="checkbox" name="is_vip" value="1">
+          <span class="switch"></span>
+          <span class="switch-label">VIP-стол <em>— премиальное размещение, повышенный минимальный заказ</em></span>
+        </label>
+        <button type="submit" class="btn btn-gold btn-block btn-lg">Забронировать</button>
+      </form>
+    </div>
+
+    <aside class="booking-side reveal">
+      <div class="status-card">
+        <h3>Статус брони</h3>
+        {% if request.args.get('submitted') %}
+        <p class="muted">Ваша заявка №{{ request.args.get('submitted') }} принята.</p>
+        <div class="status-pill" data-booking="{{ request.args.get('submitted') }}">
+          <span class="dot"></span><span class="status-text">Pending</span>
+        </div>
+        <p class="hint">Статус обновится автоматически после решения администратора.</p>
+        {% else %}
+        <p class="muted">После отправки формы здесь появится статус вашей брони:</p>
+        <ul class="status-legend">
+          <li><span class="pill pending">Pending</span> заявка на рассмотрении</li>
+          <li><span class="pill approved">Approved</span> стол подтверждён</li>
+          <li><span class="pill rejected">Rejected</span> к сожалению, отклонено</li>
+        </ul>
+        {% endif %}
+      </div>
+
+      <div class="vip-note">
+        <h4>✦ VIP-зона</h4>
+        <p>Отдельная лаунж-зона с панорамным видом, персональным официантом и приоритетным сервисом. Идеально для особых случаев.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // pre-check VIP if arrived via ?vip=1
+  (function () {
+    const params = new URLSearchParams(location.search);
+    if (params.get("vip") === "1") {
+      const cb = document.querySelector('input[name="is_vip"]');
+      if (cb) cb.checked = true;
+    }
+    // poll status for submitted booking
+    const pill = document.querySelector(".status-pill[data-booking]");
+    if (pill) {
+      const id = pill.dataset.booking;
+      const txt = pill.querySelector(".status-text");
+      const poll = async () => {
+        try {
+          const r = await fetch(`/api/booking/${id}/status`);
+          const d = await r.json();
+          if (d.status) { txt.textContent = d.status; pill.dataset.state = d.status.toLowerCase(); }
+        } catch (e) {}
+      };
+      poll(); setInterval(poll, 8000);
+    }
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Контакты — {{ BRAND }}{% endblock %}
+{% block meta %}Контакты MERVE Café в Душанбе: адрес, телефон, Telegram, Instagram, WhatsApp и часы работы.{% endblock %}
+
+{% block content %}
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow reveal">Get in touch</span>
+    <h1 class="page-title reveal">Контакты</h1>
+    <p class="page-sub reveal">Мы всегда рады гостям. Свяжитесь с нами любым удобным способом.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container contact-grid">
+    <div class="contact-info reveal">
+      <ul class="contact-list">
+        <li>
+          <span class="ci-ico">📍</span>
+          <div><b>Адрес</b><p>пр. Рудаки 88, Душанбе, Таджикистан</p></div>
+        </li>
+        <li>
+          <span class="ci-ico">📞</span>
+          <div><b>Телефон</b><p><a href="tel:+992900000000">+992 90 000 00 00</a></p></div>
+        </li>
+        <li>
+          <span class="ci-ico">✈️</span>
+          <div><b>Telegram</b><p><a href="https://t.me/mervecafe" target="_blank" rel="noopener">@mervecafe</a></p></div>
+        </li>
+        <li>
+          <span class="ci-ico">◎</span>
+          <div><b>Instagram</b><p><a href="https://instagram.com/mervecafe" target="_blank" rel="noopener">@mervecafe</a></p></div>
+        </li>
+        <li>
+          <span class="ci-ico">🕐</span>
+          <div><b>Часы работы</b><p>{{ site.get('banner_text', 'Ежедневно · 08:00 — 00:00') }}</p></div>
+        </li>
+      </ul>
+      <a href="https://wa.me/992900000000" target="_blank" rel="noopener" class="btn btn-gold btn-block">Написать в WhatsApp</a>
+    </div>
+
+    <div class="contact-form-wrap reveal">
+      <form method="post" action="{{ url_for('main.contact') }}" class="lux-form">
+        <div class="grid-2">
+          <div class="field"><label>Имя</label><input type="text" name="name" required></div>
+          <div class="field"><label>Email</label><input type="email" name="email"></div>
+        </div>
+        <div class="field"><label>Телефон</label><input type="tel" name="phone"></div>
+        <div class="field"><label>Сообщение</label><textarea name="message" rows="5" required></textarea></div>
+        <button type="submit" class="btn btn-gold btn-block btn-lg">Отправить сообщение</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="map-embed reveal">
+    <iframe
+      title="MERVE Café на карте"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=68.77%2C38.56%2C68.81%2C38.59&amp;layer=mapnik&amp;marker=38.5758%2C68.7870"
+      loading="lazy"></iframe>
+  </div>
+</section>
+{% endblock %}
