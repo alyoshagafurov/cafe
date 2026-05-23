@@ -1,0 +1,194 @@
+/* =====================================================================
+   MERVE CAFÉ — HOME PREMIUM SCROLL EXPERIENCE  (home page only)
+   Loaded AFTER luxury.css and ONLY on index.html.
+   Does not affect any other page. No other CSS file is modified.
+   Focus: luxury reveals, cinematic depth, 60fps, Safari-safe.
+   ===================================================================== */
+
+:root{
+  --hl-gold:#c9a25a;
+  --hl-gold-bright:#e6c886;
+  --hl-ease:cubic-bezier(.22,1,.36,1);
+  --hl-ease-soft:cubic-bezier(.4,0,.2,1);
+}
+
+/* GPU / Safari smoothing hints applied narrowly where we animate */
+.hl-home .hero-bg,
+.hl-home [data-parallax],
+.hl-home [data-reveal]{
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+}
+
+/* =====================================================================
+   1. PREMIUM SCROLL PROGRESS LINE
+   ===================================================================== */
+.hl-progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:2000;
+  background:rgba(255,255,255,.05);pointer-events:none;
+}
+.hl-progress > i{
+  display:block;height:100%;width:100%;transform-origin:0 50%;
+  transform:scaleX(0);
+  background:linear-gradient(90deg,var(--hl-gold),var(--hl-gold-bright));
+  box-shadow:0 0 14px rgba(230,200,134,.55);
+  will-change:transform;
+}
+
+/* =====================================================================
+   2. CINEMATIC REVEAL SYSTEM  (driven by IntersectionObserver in JS)
+   Default state is VISIBLE — only hidden once <html> gets .hl-ready,
+   so if JS/CSS fails the content is never stuck invisible.
+   ===================================================================== */
+html.hl-ready .hl-home [data-reveal]{
+  opacity:0;
+  will-change:transform,opacity;
+  transition:
+    opacity 1.05s var(--hl-ease),
+    transform 1.15s var(--hl-ease),
+    filter 1.15s var(--hl-ease),
+    clip-path 1.15s var(--hl-ease);
+  transition-delay:var(--hl-delay,0ms);
+}
+/* directional / style variants */
+html.hl-ready .hl-home [data-reveal="up"]   { transform:translateY(46px); }
+html.hl-ready .hl-home [data-reveal="fade"] { transform:none; }
+html.hl-ready .hl-home [data-reveal="left"] { transform:translateX(-54px); }
+html.hl-ready .hl-home [data-reveal="right"]{ transform:translateX(54px); }
+html.hl-ready .hl-home [data-reveal="scale"]{ transform:scale(.92); }
+html.hl-ready .hl-home [data-reveal="soft"] { transform:translateY(40px); filter:blur(8px); }
+html.hl-ready .hl-home [data-reveal="clip"] {
+  clip-path:inset(0 0 100% 0);
+  transform:translateY(30px);
+}
+/* revealed */
+html.hl-ready .hl-home [data-reveal].is-visible{
+  opacity:1;
+  transform:none;
+  filter:none;
+  clip-path:inset(0 0 0 0);
+}
+
+/* =====================================================================
+   3. HERO — cinematic depth polish (no transform on .hero-content:
+      that element is owned by main.js parallax — we only enhance layers)
+   ===================================================================== */
+.hl-home .hero{ isolation:isolate; }
+/* richer cinematic gradient + vignette layer */
+.hl-home .hero-gradient{
+  background:
+    radial-gradient(120% 80% at 70% 18%, rgba(201,162,90,.16), transparent 55%),
+    radial-gradient(140% 90% at 18% 92%, rgba(0,0,0,.55), transparent 60%),
+    linear-gradient(180deg, rgba(8,8,9,.30) 0%, rgba(8,8,9,.10) 38%, rgba(8,8,9,.86) 100%);
+}
+.hl-home .hero::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(130% 120% at 50% 42%, transparent 58%, rgba(0,0,0,.55) 100%);
+}
+/* slow ambient drift of the canvas/bg for living depth */
+.hl-home .hero-bg{
+  animation:hlHeroDrift 22s ease-in-out infinite alternate;
+  transform-origin:60% 40%;
+}
+@keyframes hlHeroDrift{
+  from{ transform:scale(1.02) translate3d(0,0,0); }
+  to  { transform:scale(1.08) translate3d(-1.4%,-1.2%,0); }
+}
+/* refined scroll cue */
+.hl-home .hero-scroll{ opacity:.85; }
+.hl-home .hero-scroll span:first-child{
+  font-size:.66rem;letter-spacing:.32em;text-transform:uppercase;color:var(--hl-gold-bright);
+}
+
+/* =====================================================================
+   4. SECTION HEADINGS — elegant drawn divider
+   ===================================================================== */
+.hl-home .section-head .divider{ position:relative; }
+.hl-home .section-head.center .divider::after{
+  content:"";display:block;height:1px;width:0;margin:1.1rem auto 0;
+  background:linear-gradient(90deg,transparent,var(--hl-gold),transparent);
+  transition:width 1.4s var(--hl-ease) .15s;
+}
+html.hl-ready .hl-home .section-head.center.is-visible .divider::after,
+html.hl-ready .hl-home .section-head.center [data-reveal].is-visible ~ .divider::after{ width:170px; }
+/* simpler: when the head reveals, draw the line */
+html.hl-ready .hl-home .section-head.center[data-reveal].is-visible .divider::after{ width:170px; }
+
+/* =====================================================================
+   5. LUXURY CARD HOVER  (gallery / features / loyalty / dish media)
+   .dish hover transform stays owned by main.js tilt — we only enhance
+   inner media + sheen so we never fight inline transforms.
+   ===================================================================== */
+.hl-home .dish-media{ overflow:hidden; position:relative; }
+.hl-home .dish-media img{
+  transition:transform 1.2s var(--hl-ease), filter .8s var(--hl-ease);
+  will-change:transform;
+}
+.hl-home .dish:hover .dish-media img{ transform:scale(1.07); filter:saturate(1.05); }
+.hl-home .dish-media::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.10) 50%,transparent 62%);
+  transform:translateX(-120%);transition:transform 1.1s var(--hl-ease);
+}
+.hl-home .dish:hover .dish-media::after{ transform:translateX(120%); }
+
+/* gallery preview — premium zoom + lift */
+.hl-home .gal-item{
+  overflow:hidden;
+  transition:transform .9s var(--hl-ease), box-shadow .9s var(--hl-ease);
+}
+.hl-home .gal-item img{ transition:transform 1.3s var(--hl-ease), filter 1s var(--hl-ease); will-change:transform; }
+.hl-home .gal-item:hover{ transform:translateY(-6px); box-shadow:0 30px 60px -28px rgba(0,0,0,.7); }
+.hl-home .gal-item:hover img{ transform:scale(1.08); filter:brightness(1.04); }
+
+/* feature & loyalty cards — subtle premium lift */
+.hl-home .feature,
+.hl-home .loy,
+.hl-home .promo,
+.hl-home .post{
+  transition:transform .8s var(--hl-ease), box-shadow .8s var(--hl-ease), border-color .8s var(--hl-ease);
+  will-change:transform;
+}
+.hl-home .feature:hover,
+.hl-home .loy:hover,
+.hl-home .promo:hover,
+.hl-home .post:hover{
+  transform:translateY(-7px);
+  box-shadow:0 34px 70px -34px rgba(0,0,0,.75);
+}
+
+/* elegant link underline draw on ghost buttons */
+.hl-home .btn-ghost{ position:relative;overflow:hidden; }
+.hl-home .btn-ghost::after{
+  content:"";position:absolute;left:0;bottom:0;height:100%;width:100%;
+  background:linear-gradient(90deg,rgba(201,162,90,.16),rgba(230,200,134,.10));
+  transform:translateX(-101%);transition:transform .7s var(--hl-ease);z-index:-1;
+}
+.hl-home .btn-ghost:hover::after{ transform:translateX(0); }
+
+/* =====================================================================
+   6. CINEMATIC SECTION ENTRANCE — soft scale on framed image (parallax)
+   ===================================================================== */
+.hl-home .framed{ overflow:hidden; }
+.hl-home .framed img{ will-change:transform; }
+
+/* =====================================================================
+   7. MOBILE + ACCESSIBILITY
+   ===================================================================== */
+@media (max-width:760px){
+  html.hl-ready .hl-home [data-reveal]{ transform:translateY(30px) !important; filter:none !important; clip-path:none !important; }
+  html.hl-ready .hl-home [data-reveal].is-visible{ transform:none !important; }
+  .hl-home .hero-bg{ animation:none; }   /* save battery, avoid mobile jank */
+}
+
+/* Honour users who prefer no motion: show everything, no transforms */
+@media (prefers-reduced-motion: reduce){
+  html.hl-ready .hl-home [data-reveal]{
+    opacity:1 !important;transform:none !important;filter:none !important;clip-path:none !important;
+    transition:none !important;
+  }
+  .hl-home .hero-bg{ animation:none !important; }
+  .hl-progress{ display:none; }
+}

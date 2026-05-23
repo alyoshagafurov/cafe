@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{# Home-only premium scroll experience.
+   - Sets hl-ready before paint (no flash of hidden content).
+   - Loads home-only CSS AFTER luxury.css so it only affects this page.
+   base.html, luxury.css and main.js are NOT modified. #}
+{% block head %}
+  <script>document.documentElement.classList.add('hl-ready');</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home-luxury.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="hl-home">
+
+  <!-- premium scroll progress line -->
+  <div class="hl-progress" aria-hidden="true"><i></i></div>
+
+  <!-- ===================== HERO (owned by main.js: intro + parallax + canvas) ===================== -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <canvas id="hero-canvas"></canvas>
+    </div>
+    <div class="steam"><span></span><span></span><span></span></div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="eyebrow">{{ site.get('hero_tagline', 'DUSHANBE · FINE DINING & COFFEE') }}</span>
+        <h1>
+          <span class="ln">{{ site.get('hero_title', 'MERVE Café').split('—')[0] }}</span>
+          <span class="ln"><span class="it">Luxury Experience</span></span>
+        </h1>
+        <p class="hero-sub">{{ site.get('hero_subtitle', 'Место, где вкус, атмосфера и эстетика встречаются.') }}</p>
+        <div class="hero-cta">
+          <a href="{{ url_for('booking.booking') }}" class="btn btn-gold magnetic">Забронировать стол</a>
+          <a href="{{ url_for('menu.menu') }}" class="btn btn-ghost magnetic">Смотреть меню</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll"><span>Scroll</span><span class="line"></span></div>
+  </section>
+
+  <!-- ===================== FEATURES ===================== -->
+  <section>
+    <div class="features" data-reveal-group="120">
+      <div class="feature" data-reveal="up"><div class="ic">✦</div><h4>Specialty Coffee</h4><p>Зёрна микро-обжарки и искусство латте-арта.</p></div>
+      <div class="feature" data-reveal="up"><div class="ic">✺</div><h4>Авторская кухня</h4><p>Сезонное меню от шефа с акцентом на детали.</p></div>
+      <div class="feature" data-reveal="up"><div class="ic">❖</div><h4>Атмосфера</h4><p>Приглушённый свет, музыка и VIP-зоны.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== SIGNATURE MENU ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal="up">
+        <span class="divider">Signature</span>
+        <h2>Избранное меню</h2>
+        <p>Самые любимые позиции наших гостей — от фирменного латте до дегустационного сета шефа.</p>
+      </div>
+      <div class="swiper sig-swiper" data-reveal="fade">
+        <div class="swiper-wrapper">
+          {% for i in featured %}
+          <div class="swiper-slide">
+            <article class="dish">
+              <div class="dish-media">
+                {% if i.badge == 'best' %}<span class="badge badge-best">Best Seller</span>
+                {% elif i.badge == 'premium' %}<span class="badge badge-premium">Premium</span>
+                {% elif i.badge == 'new' %}<span class="badge badge-new">New</span>{% endif %}
+                <img src="{{ url_for('static', filename=i.photo_url) }}" alt="{{ i.title }}">
+              </div>
+              <div class="dish-body">
+                <div class="dish-head"><h3>{{ i.title }}</h3><span class="dish-price">{{ i.price }} сом.</span></div>
+                <p class="dish-desc">{{ i.description }}</p>
+                <button class="btn btn-gold btn-sm btn-block" data-add="{{ i.id }}">В корзину</button>
+              </div>
+            </article>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination" style="position:static;margin-top:2rem"></div>
+      </div>
+      <div class="center" style="margin-top:2.6rem" data-reveal="up">
+        <a href="{{ url_for('menu.menu') }}" class="btn btn-ghost magnetic">Всё меню</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT SPLIT ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="split">
+        <div data-reveal="left">
+          <span class="divider">Наша история</span>
+          <h2 style="font-size:clamp(2.2rem,5vw,3.6rem);margin:1rem 0">Эстетика в каждой детали</h2>
+          <p class="muted">{{ site.get('about_text') }}</p>
+          <div class="stat-row">
+            <div class="stat"><div class="num"><span data-count="120">0</span>+</div><div class="lbl">Позиций меню</div></div>
+            <div class="stat"><div class="num"><span data-count="15">0</span>k</div><div class="lbl">Гостей в год</div></div>
+            <div class="stat"><div class="num"><span data-count="4">0</span>.9</div><div class="lbl">Рейтинг</div></div>
+          </div>
+          <a href="{{ url_for('main.about') }}" class="btn btn-ghost magnetic" style="margin-top:2rem">Узнать больше</a>
+        </div>
+        <div class="framed" data-reveal="right">
+          <img src="{{ url_for('static', filename='img/placeholder-interior.svg') }}" alt="Интерьер MERVE" data-parallax="0.10">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIP ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="vip" data-reveal="up">
+        <span class="eyebrow">Exclusive</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.8rem);margin:1rem 0;max-width:560px">VIP-зона для особых вечеров</h2>
+        <p class="muted" style="max-width:520px">Приватные столы, персональный сервис и эксклюзивное меню. Идеально для важных встреч и торжеств.</p>
+        <div class="vip-feats">
+          <div class="vip-feat"><span class="ic">✦</span> Приватное размещение</div>
+          <div class="vip-feat"><span class="ic">✦</span> Персональный официант</div>
+          <div class="vip-feat"><span class="ic">✦</span> Премиальное меню</div>
+        </div>
+        <a href="{{ url_for('booking.booking') }}?vip=1" class="btn btn-gold magnetic" style="margin-top:2.4rem">Забронировать VIP</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LOYALTY ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal="up">
+        <span class="divider">Loyalty</span>
+        <h2>Программа лояльности</h2>
+        <p>Чем чаще вы с нами — тем больше привилегий.</p>
+      </div>
+      <div class="loy-grid" data-reveal-group="120">
+        <div class="loy" data-reveal="up"><div class="step">5 + 1</div><h4>Бесплатный кофе</h4><p class="muted">Купите 5 кофе — шестой за наш счёт.</p></div>
+        <div class="loy" data-reveal="up"><div class="step">1 ⭢ 1</div><h4>Баллы за заказы</h4><p class="muted">1 балл за каждый сомони. Меняйте на блюда.</p></div>
+        <div class="loy" data-reveal="up"><div class="step">VIP</div><h4>Статусы</h4><p class="muted">Bronze · Gold · Platinum с растущими привилегиями.</p></div>
+      </div>
+      <div class="center" style="margin-top:2.6rem" data-reveal="up">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-gold magnetic">Стать участником</a>
+      </div>
+    </div>
+  </section>
+
+  {% if promos %}
+  <!-- ===================== PROMOS ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal="up"><span class="divider">Акции</span><h2>Специальные предложения</h2></div>
+      <div class="promo-grid" data-reveal-group="110">
+        {% for p in promos %}
+        <div class="promo" data-reveal="up">
+          {% if p.discount_percent %}<div class="disc">−{{ p.discount_percent }}%</div>{% else %}<div class="disc">★</div>{% endif %}
+          <h4 style="font-size:1.5rem;margin:.4rem 0">{{ p.title }}</h4>
+          <p class="muted">{{ p.description }}</p>
+          {% if p.code %}<span class="code">{{ p.code }}</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===================== GALLERY PREVIEW ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal="up"><span class="divider">Atmosphere</span><h2>Галерея</h2></div>
+      <div class="gal-grid" data-reveal-group="90">
+        {% for g in gallery %}
+        <div class="gal-item" data-reveal="scale" data-section="{{ g.section }}" data-full="{{ url_for('static', filename=g.image_url) }}">
+          <img src="{{ url_for('static', filename=g.image_url) }}" alt="{{ g.title }}">
+          <div class="cap">{{ g.title }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="center" style="margin-top:2.6rem" data-reveal="up"><a href="{{ url_for('main.gallery') }}" class="btn btn-ghost magnetic">Вся галерея</a></div>
+    </div>
+  </section>
+
+  {% if posts %}
+  <!-- ===================== BLOG PREVIEW ===================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" data-reveal="up"><span class="divider">Журнал</span><h2>Новости и события</h2></div>
+      <div class="posts" data-reveal-group="120">
+        {% for post in posts %}
+        <a class="post" data-reveal="up" href="{{ url_for('main.blog_detail', slug=post.slug) }}">
+          <img src="{{ url_for('static', filename=post.cover_url) }}" alt="{{ post.title }}">
+          <div class="post-body"><span class="post-cat">{{ post.category }}</span><h3>{{ post.title }}</h3><p>{{ post.excerpt }}</p></div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- lightbox (owned by main.js) -->
+  <div class="lightbox"><span class="close">×</span><img src="" alt=""></div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  if (window.Swiper) {
+    new Swiper('.sig-swiper', {
+      slidesPerView: 1.1, spaceBetween: 24, grabCursor: true, centeredSlides: false,
+      pagination: { el: '.sig-swiper .swiper-pagination', clickable: true },
+      breakpoints: { 640: { slidesPerView: 2.1 }, 1000: { slidesPerView: 3 } }
+    });
+  }
+</script>
+<script src="{{ url_for('static', filename='js/home-luxury.js') }}"></script>
+{% endblock %}
